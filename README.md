@@ -1,1 +1,1 @@
-# vehicle-manater
+# vehicle-manager
