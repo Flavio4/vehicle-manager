@@ -20,9 +20,6 @@ public class Brand {
     @Column(name = "model", nullable = false)
     private List<String> models;
 
-    @OneToMany(mappedBy = "brand")
-    private List<Car> cars;
-
     // Getters y Setters
     public Long getId() {
         return id;
