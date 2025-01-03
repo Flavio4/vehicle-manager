@@ -12,7 +12,7 @@ public class Car {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "brand_id", nullable = false)
     private Brand brand;
 
@@ -46,16 +46,16 @@ public class Car {
         this.status = status;
     }
 
+    public Long getId() {
+        return id;
+    }
+
     public Brand getBrand() {
         return brand;
     }
 
     public void setBrand(Brand brand) {
         this.brand = brand;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public void setId(Long id) {
@@ -92,5 +92,27 @@ public class Car {
 
     public void setStatus(CarStatus status) {
         this.status = status;
+    }
+
+    public String getColor() { return color; }
+
+    public void setColor(String color) { this.color = color; }
+
+    public String getPlate() { return plate; }
+
+    public void setPlate(String plate) { this.plate = plate; }
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", brand=" + brand +
+                ", model='" + model + '\'' +
+                ", year=" + year +
+                ", price=" + price +
+                ", status=" + status +
+                ", color='" + color + '\'' +
+                ", plate='" + plate + '\'' +
+                '}';
     }
 }

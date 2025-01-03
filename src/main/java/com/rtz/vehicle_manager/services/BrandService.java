@@ -2,7 +2,7 @@ package com.rtz.vehicle_manager.services;
 
 import com.rtz.vehicle_manager.entities.Brand;
 import com.rtz.vehicle_manager.errors.DuplicateBrandException;
-import com.rtz.vehicle_manager.models.BrandModel;
+import com.rtz.vehicle_manager.dto.BrandDTO;
 import com.rtz.vehicle_manager.repositories.BrandRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class BrandService {
      * @param brandModel The brand model to save
      * @return The saved brand
      */
-    public Brand saveBrand(BrandModel brandModel) {
+    public Brand saveBrand(BrandDTO brandModel) {
         if (brandRepository.existsByName(brandModel.getName().toUpperCase())) {
            throw new DuplicateBrandException();
         }
@@ -44,7 +44,7 @@ public class BrandService {
      * @param brandModel The brand model to update
      * @return The updated brand
      */
-    public Brand updateBrand(Long id, BrandModel brandModel) {
+    public Brand updateBrand(Long id, BrandDTO brandModel) {
         Brand brand = new Brand();
         brand.setId(id);
         brand.setName(brandModel.getName().toUpperCase());
@@ -55,14 +55,29 @@ public class BrandService {
         return brandRepository.save(brand);
     }
 
+    /**
+     * Retrieves all brands from the database
+     * @return A list of all brands
+     */
     public List<Brand> getAllBrands() {
         return brandRepository.findAll();
     }
 
+    /**
+     * Retrieves a brand by its id
+     * @param brandId The id of the brand to retrieve
+     * @return The brand with the given id
+     */
     public Optional<Brand> getBrandById(Long brandId) {
         return brandRepository.findById(brandId);
     }
 
+    /**
+     * Adds new models to an existing brand
+     * @param brand The brand to add the new models to
+     * @param models The new models to add
+     * @return The updated brand
+     */
     public Brand addModelsToBrand(Brand brand, List<String> models) {
         List<String> newModels = filterNewModels(brand, models);
         // Add the new models to the current models list
@@ -73,6 +88,10 @@ public class BrandService {
         return brandRepository.save(brand);
     }
 
+    /**
+     * Deletes a brand from the database
+     * @param brandId The id of the brand to delete
+     */
     public void deleteBrand(Long brandId) {
         brandRepository.deleteById(brandId);
     }

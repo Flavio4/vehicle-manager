@@ -2,7 +2,7 @@ package com.rtz.vehicle_manager.controllers;
 
 
 import com.rtz.vehicle_manager.entities.Brand;
-import com.rtz.vehicle_manager.models.BrandModel;
+import com.rtz.vehicle_manager.dto.BrandDTO;
 import com.rtz.vehicle_manager.services.BrandService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class BrandController {
 
     /*POST*/
     @PostMapping
-    public Brand createBrand(@Valid @RequestBody BrandModel createBrandModel) {
+    public Brand createBrand(@Valid @RequestBody BrandDTO createBrandModel) {
         return brandService.saveBrand(createBrandModel);
     }
 
@@ -60,7 +60,7 @@ public class BrandController {
 
     /*PUT*/
     @PutMapping("/{id}")
-    public ResponseEntity<Brand> updateBrand(@PathVariable Long id,@Valid @RequestBody BrandModel updatedBrand) {
+    public ResponseEntity<Brand> updateBrand(@PathVariable Long id, @Valid @RequestBody BrandDTO updatedBrand) {
         Optional<Brand> brandOptional = brandService.getBrandById(id);
         if (brandOptional.isPresent()) {
             return ResponseEntity.ok(brandService.updateBrand(id, updatedBrand));
