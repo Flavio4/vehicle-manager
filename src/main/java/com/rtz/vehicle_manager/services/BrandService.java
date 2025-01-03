@@ -29,11 +29,12 @@ public class BrandService {
         }
         Brand newBrand = new Brand();
         newBrand.setName(brandModel.getName().toUpperCase());
-        // Capitalize the first letter of each word in the models list
-        List<String> models = brandModel.getModels().stream()
-                .map(this::capitalizeWords)
-                .toList();
-        newBrand.setModels(models);
+        if (brandModel.getModels() != null) {
+            List<String> models = brandModel.getModels().stream()
+                    .map(this::capitalizeWords)
+                    .toList();
+            newBrand.setModels(models);
+        }
         return brandRepository.save(newBrand);
     }
 
