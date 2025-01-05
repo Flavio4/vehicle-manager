@@ -52,9 +52,10 @@ public class CarService {
      * @return The updated car
      */
     public CarDTO updateCar(Long id, CarDTO updatedCarDto) {
-        if (carRepository.existsById(id)) {
-            List<Image> carImages = new ArrayList<>();
-            Car updatedCar = mapCarDtoToEntity(updatedCarDto, carImages);
+        Optional<Car> actualCar = carRepository.findById(id);
+        if (actualCar.isPresent()) {
+            List<Image> actualCarImages = actualCar.get().getImages();
+            Car updatedCar = mapCarDtoToEntity(updatedCarDto, actualCarImages);
             updatedCar.setId(id);
             return mapCarEntityToDto(carRepository.save(updatedCar));
         } else {
