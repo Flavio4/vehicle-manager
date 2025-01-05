@@ -3,11 +3,13 @@ package com.rtz.vehicle_manager.controllers;
 import com.rtz.vehicle_manager.entities.Car;
 import com.rtz.vehicle_manager.dto.CarDTO;
 import com.rtz.vehicle_manager.services.CarService;
+import com.rtz.vehicle_manager.services.ImageService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -32,9 +34,9 @@ public class CarController {
     }
 
     /*POST*/
-    @PostMapping
-    public CarDTO createCar(@Valid @RequestBody CarDTO newCar) {
-        return carService.saveNewCar(newCar);
+    @PostMapping(consumes = {"multipart/form-data"})
+    public CarDTO createCar(@Valid @RequestPart("carData") CarDTO newCar, @RequestPart(value = "images", required = false) List<MultipartFile> images) {
+        return carService.saveNewCar(newCar, images);
     }
 
     /*PUT*/

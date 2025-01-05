@@ -4,6 +4,9 @@ import com.rtz.vehicle_manager.enums.CarStatus;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 public class CarDTO {
 
@@ -30,10 +33,14 @@ public class CarDTO {
 
     private String plate;
 
+    private String description;
+
+    private List<String> imagesUrl;
+
     public CarDTO() {
     }
 
-    public CarDTO(Long id, Long brandId, String brandName, String model, int year, double price, CarStatus status, String color, String plate) {
+    public CarDTO(Long id, Long brandId, String brandName, String model, int year, double price, CarStatus status, String color, String plate,String description, List<String> imagesUrl) {
         this.id = id;
         this.brandId = brandId;
         this.brandName = brandName;
@@ -43,9 +50,11 @@ public class CarDTO {
         this.status = status;
         this.color = color;
         this.plate = plate;
+        this.description = description;
+        this.imagesUrl = imagesUrl;
     }
 
-    public CarDTO(Long brandId, String brandName, String model, int year, double price, CarStatus status, String color, String plate) {
+    public CarDTO(Long brandId, String brandName, String model, int year, double price, CarStatus status, String color, String plate,String description, List<String> imagesUrl) {
         this.brandId = brandId;
         this.brandName = brandName;
         this.model = model;
@@ -54,6 +63,8 @@ public class CarDTO {
         this.status = status;
         this.color = color;
         this.plate = plate;
+        this.description = description;
+        this.imagesUrl = imagesUrl;
     }
 
     public Long getId() {
@@ -126,6 +137,22 @@ public class CarDTO {
 
     public void setPlate(String plate) {
         this.plate = plate;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<String> getImagesUrl() {
+        return imagesUrl;
+    }
+
+    public void setImagesUrl(List<String> imagesUrl) {
+        this.imagesUrl = imagesUrl;
     }
 
     @Override

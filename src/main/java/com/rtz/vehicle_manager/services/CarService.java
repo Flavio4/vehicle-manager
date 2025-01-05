@@ -2,15 +2,19 @@ package com.rtz.vehicle_manager.services;
 
 import com.rtz.vehicle_manager.entities.Brand;
 import com.rtz.vehicle_manager.entities.Car;
+import com.rtz.vehicle_manager.entities.Image;
 import com.rtz.vehicle_manager.errors.BrandNotfoundException;
 import com.rtz.vehicle_manager.errors.CarNotfoundException;
 import com.rtz.vehicle_manager.errors.ModelNotfoundException;
 import com.rtz.vehicle_manager.dto.CarDTO;
 import com.rtz.vehicle_manager.repositories.CarRepository;
 import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +25,42 @@ public class CarService {
     private CarRepository carRepository;
     @Autowired
     private BrandService brandService;
+    @Autowired
+    private ImageService imageService;
+
+
+    /**
+     * Saves a new car to the database
+     * @param car The car to save
+     * @param images The images of the car
+     * @return The saved car
+     */
+    @Transactional
+    public CarDTO saveNewCar(CarDTO car, List<MultipartFile> images) {
+        List<Image> carImages = new ArrayList<>();
+        if (images != null && !images.isEmpty()) {
+            carImages = imageService.processAndUploadCarImages(images);
+        }
+        Car newCar = mapCarDtoToEntity(car, carImages);
+        return mapCarEntityToDto(carRepository.save(newCar));
+    }
+
+    /**
+     * Updates an existing car in the database
+     * @param id The ID of the car to update
+     * @param updatedCarDto The car to update
+     * @return The updated car
+     */
+    public CarDTO updateCar(Long id, CarDTO updatedCarDto) {
+        if (carRepository.existsById(id)) {
+            List<Image> carImages = new ArrayList<>();
+            Car updatedCar = mapCarDtoToEntity(updatedCarDto, carImages);
+            updatedCar.setId(id);
+            return mapCarEntityToDto(carRepository.save(updatedCar));
+        } else {
+            throw new CarNotfoundException(id);
+        }
+    }
 
     /**
      * Retrieves all cars from the database
@@ -48,32 +88,6 @@ public class CarService {
     }
 
     /**
-     * Saves a new car to the database
-     * @param car The car to save
-     * @return The saved car
-     */
-    public CarDTO saveNewCar(CarDTO car) {
-        Car newCar = mapCarDtoToEntity(car);
-        return mapCarEntityToDto(carRepository.save(newCar));
-    }
-
-    /**
-     * Updates an existing car in the database
-     * @param id The ID of the car to update
-     * @param updatedCarDto The car to update
-     * @return The updated car
-     */
-    public CarDTO updateCar(Long id, CarDTO updatedCarDto) {
-        if (carRepository.existsById(id)) {
-            Car updatedCar = mapCarDtoToEntity(updatedCarDto);
-            updatedCar.setId(id);
-            return mapCarEntityToDto(carRepository.save(updatedCar));
-        } else {
-            throw new CarNotfoundException(id);
-        }
-    }
-
-    /**
      * Deletes a car from the database
      * @param id The ID of the car to delete
      */
@@ -90,7 +104,7 @@ public class CarService {
      * @param carDTO The CarDTO to map
      * @return The Car entity
      */
-    private Car mapCarDtoToEntity(CarDTO carDTO) {
+    private Car mapCarDtoToEntity(CarDTO carDTO, List<Image> carImages) {
         Car car = new Car();
         car.setId(carDTO.getId());
         car.setYear(carDTO.getYear());
@@ -98,6 +112,11 @@ public class CarService {
         car.setStatus(carDTO.getStatus());
         car.setColor(carDTO.getColor());
         car.setPlate(carDTO.getPlate());
+        car.setDescription(carDTO.getDescription());
+        // Set the car to each image
+        carImages.forEach(image -> image.setCar(car));
+        // Set the images to the car
+        car.setImages(carImages);
         Optional<Brand> brandOptional = brandService.getBrandById(carDTO.getBrandId());
         // Validate that the brand exists and that the model belongs to the brand
         if (brandOptional.isPresent()) {
@@ -130,6 +149,14 @@ public class CarService {
         carModel.setBrandName(car.getBrand().getName());
         carModel.setModel(car.getModel());
         carModel.setPlate(car.getPlate());
+        carModel.setDescription(car.getDescription());
+        List<Image> carImages = car.getImages();
+        if (carImages != null) {
+            List<String> imagesUrl = carImages.stream()
+                    .map(Image::getUrl)
+                    .toList();
+            carModel.setImagesUrl(imagesUrl);
+        }
         return carModel;
     }
 

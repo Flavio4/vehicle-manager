@@ -4,6 +4,8 @@ package com.rtz.vehicle_manager.entities;
 import com.rtz.vehicle_manager.enums.CarStatus;
 import jakarta.persistence.*;
 
+import java.util.List;
+
 @Entity
 @Table(name = "cars")
 public class Car {
@@ -34,16 +36,27 @@ public class Car {
     @Column(nullable = true)
     private String plate;
 
+    @Column(nullable = true)
+    private String description;
+
+    @OneToMany(mappedBy = "car", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images;
+
 
     public Car() {
     }
 
-    public Car(Brand brand, String model, int year, double price, CarStatus status) {
+    public Car(Long id, Brand brand, String model, int year, double price, CarStatus status, String color, String plate, String description, List<Image> images) {
+        this.id = id;
         this.brand = brand;
         this.model = model;
         this.year = year;
         this.price = price;
         this.status = status;
+        this.color = color;
+        this.plate = plate;
+        this.description = description;
+        this.images = images;
     }
 
     public Long getId() {
@@ -101,6 +114,18 @@ public class Car {
     public String getPlate() { return plate; }
 
     public void setPlate(String plate) { this.plate = plate; }
+
+    public String getDescription() { return description; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public List<Image> getImages() {
+        return images;
+    }
+
+    public void setImages(List<Image> images) {
+        this.images = images;
+    }
 
     @Override
     public String toString() {
