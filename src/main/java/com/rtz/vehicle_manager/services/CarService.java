@@ -1,5 +1,6 @@
 package com.rtz.vehicle_manager.services;
 
+import com.rtz.vehicle_manager.dto.ImageDTO;
 import com.rtz.vehicle_manager.entities.Brand;
 import com.rtz.vehicle_manager.entities.Car;
 import com.rtz.vehicle_manager.entities.Image;
@@ -58,6 +59,30 @@ public class CarService {
             Car updatedCar = mapCarDtoToEntity(updatedCarDto, actualCarImages);
             updatedCar.setId(id);
             return mapCarEntityToDto(carRepository.save(updatedCar));
+        } else {
+            throw new CarNotfoundException(id);
+        }
+    }
+
+    /**
+     * Adds images to an existing car
+     * @param id The ID of the car to add images to
+     * @param images The images to add
+     * @return The car with the added images
+     */
+    public CarDTO addImagesToCar(Long id, List<MultipartFile> images) {
+        Optional<Car> carOptional = carRepository.findById(id);
+        if (carOptional.isPresent()) {
+            List<Image> carImages = new ArrayList<>();
+            if (images != null && !images.isEmpty()) {
+                carImages = imageService.processAndUploadCarImages(images);
+            } else {
+                throw new IllegalArgumentException("No se han enviado imágenes");
+            }
+            Car car = carOptional.get();
+            carImages.forEach(image -> image.setCar(car));
+            car.getImages().addAll(carImages);
+            return mapCarEntityToDto(carRepository.save(car));
         } else {
             throw new CarNotfoundException(id);
         }
@@ -153,10 +178,11 @@ public class CarService {
         carModel.setDescription(car.getDescription());
         List<Image> carImages = car.getImages();
         if (carImages != null) {
-            List<String> imagesUrl = carImages.stream()
-                    .map(Image::getUrl)
+            //Transform the list of images to a list of ImageDTO
+            List<ImageDTO> imagesDTO = carImages.stream()
+                            .map(image -> new ImageDTO(image.getId(), image.getUrl()))
                     .toList();
-            carModel.setImagesUrl(imagesUrl);
+            carModel.setImages(imagesDTO);
         }
         return carModel;
     }

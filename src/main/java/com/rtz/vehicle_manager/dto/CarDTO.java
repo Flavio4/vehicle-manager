@@ -1,5 +1,6 @@
 package com.rtz.vehicle_manager.dto;
 
+import com.rtz.vehicle_manager.entities.Image;
 import com.rtz.vehicle_manager.enums.CarStatus;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -35,12 +36,12 @@ public class CarDTO {
 
     private String description;
 
-    private List<String> imagesUrl;
+    private List<ImageDTO> images;
 
     public CarDTO() {
     }
 
-    public CarDTO(Long id, Long brandId, String brandName, String model, int year, double price, CarStatus status, String color, String plate,String description, List<String> imagesUrl) {
+    public CarDTO(Long id, Long brandId, String brandName, String model, int year, double price, CarStatus status, String color, String plate,String description, List<ImageDTO> images) {
         this.id = id;
         this.brandId = brandId;
         this.brandName = brandName;
@@ -51,10 +52,10 @@ public class CarDTO {
         this.color = color;
         this.plate = plate;
         this.description = description;
-        this.imagesUrl = imagesUrl;
+        this.images = images;
     }
 
-    public CarDTO(Long brandId, String brandName, String model, int year, double price, CarStatus status, String color, String plate,String description, List<String> imagesUrl) {
+    public CarDTO(Long brandId, String brandName, String model, int year, double price, CarStatus status, String color, String plate,String description, List<ImageDTO> images) {
         this.brandId = brandId;
         this.brandName = brandName;
         this.model = model;
@@ -64,7 +65,7 @@ public class CarDTO {
         this.color = color;
         this.plate = plate;
         this.description = description;
-        this.imagesUrl = imagesUrl;
+        this.images = images;
     }
 
     public Long getId() {
@@ -147,12 +148,12 @@ public class CarDTO {
         this.description = description;
     }
 
-    public List<String> getImagesUrl() {
-        return imagesUrl;
+    public List<ImageDTO> getImages() {
+        return images;
     }
 
-    public void setImagesUrl(List<String> imagesUrl) {
-        this.imagesUrl = imagesUrl;
+    public void setImages(List<ImageDTO> imagesUrl) {
+        this.images = imagesUrl;
     }
 
     @Override

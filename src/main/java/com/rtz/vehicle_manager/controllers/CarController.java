@@ -39,6 +39,11 @@ public class CarController {
         return carService.saveNewCar(newCar, images);
     }
 
+    @PostMapping(value = "/{carId}/images")
+    public ResponseEntity<CarDTO> addImagesToCar(@PathVariable Long carId, @RequestParam(value = "images", required = false) List<MultipartFile> images) {
+        return ResponseEntity.ok(carService.addImagesToCar(carId, images));
+    }
+
     /*PUT*/
     @PutMapping("/{id}")
     public ResponseEntity<CarDTO> updateCar(@PathVariable Long id,@Valid @RequestBody CarDTO updatedCar) {
@@ -51,4 +56,6 @@ public class CarController {
         carService.deleteCar(id);
         return ResponseEntity.noContent().build();
     }
+
+    //TODO: Implement Image deletion endpoint
 }
