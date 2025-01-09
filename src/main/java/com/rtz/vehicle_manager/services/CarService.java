@@ -125,6 +125,10 @@ public class CarService {
         }
     }
 
+    public void deleteCarImage(Long imageId) {
+        imageService.deleteImage(imageId);
+    }
+
     /**
      * Maps a CarDTO to a Car entity
      * @param carDTO The CarDTO to map

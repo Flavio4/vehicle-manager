@@ -11,8 +11,6 @@ public class ImageDTO {
 
     private Long id;
 
-    @NotNull(message = "La url de la imagen es obligatoria")
-    @NotEmpty(message = "La url de la imagen no puede estar vacía")
     private String url;
 
     public ImageDTO() {
@@ -31,7 +29,16 @@ public class ImageDTO {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     public String getUrl() {
         return url;
     }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
 }

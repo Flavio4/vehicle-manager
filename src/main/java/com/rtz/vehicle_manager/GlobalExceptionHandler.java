@@ -1,9 +1,6 @@
 package com.rtz.vehicle_manager;
 
-import com.rtz.vehicle_manager.errors.BrandNotfoundException;
-import com.rtz.vehicle_manager.errors.CarNotfoundException;
-import com.rtz.vehicle_manager.errors.DuplicateBrandException;
-import com.rtz.vehicle_manager.errors.ModelNotfoundException;
+import com.rtz.vehicle_manager.errors.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -53,6 +50,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CarNotfoundException.class)
     public ResponseEntity<Map<String, Object>> handleBrandNotFoundException(CarNotfoundException ex) {
         Map<String, Object> body = getBody(ex, HttpStatus.NOT_FOUND, "Vehiculo no encontrado");
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
+    }
+
+    @ExceptionHandler(ImageNotfoundException.class)
+    public ResponseEntity<Map<String, Object>> handleImageNotFoundException(ImageNotfoundException ex) {
+        Map<String, Object> body = getBody(ex, HttpStatus.NOT_FOUND, "Imagen no encontrada");
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(body);
     }
 

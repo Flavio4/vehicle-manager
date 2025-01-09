@@ -57,5 +57,9 @@ public class CarController {
         return ResponseEntity.noContent().build();
     }
 
-    //TODO: Implement Image deletion endpoint
+    @DeleteMapping("/images/{imageId}")
+    public ResponseEntity<CarDTO> deleteImage(@PathVariable Long imageId) {
+        carService.deleteCarImage(imageId);
+        return ResponseEntity.noContent().build();
+    }
 }
