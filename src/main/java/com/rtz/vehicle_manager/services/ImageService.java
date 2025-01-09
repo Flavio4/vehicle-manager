@@ -53,21 +53,8 @@ public class ImageService {
                 //Save the image url to delete it in case of error
                 imageUrls.add(imageUrl);
             } catch (IOException e) {
-                //Delete the images uploaded to Cloudinary
-                if (!imageUrls.isEmpty()) {
-                    List<String> imagesPublicId= new ArrayList<>();
-                    for (String url : imageUrls) {
-                        String publicId = url.substring(url.indexOf("v1/") + 3);
-                        System.out.println("Public id: "+ publicId);
-                        imagesPublicId.add(publicId);
-                    }
-                    try {
-                        ApiResponse deleteResult = cloudinary.api().deleteResources(imagesPublicId, Collections.emptyMap());
-                        System.out.println("Delete result: " + deleteResult);
-                    } catch (Exception ex) {
-                        throw new RuntimeException("Ha ocurrido un error al realizar el rollback de las imágenes: " + ex.getMessage());
-                    }
-                }
+                //Rollback the uploaded images
+                rollbackUploadedImages(imageUrls);
                 throw new RuntimeException("Ha ocurrido un error al subir la imagen: " + e.getMessage());
             }
 
@@ -107,6 +94,27 @@ public class ImageService {
         Transformation<?> transformation = new Transformation<>();
         transformation.quality("auto");
         return cloudinary.url().secure(true).transformation(transformation).generate(publicId);
+    }
+
+    /**
+     * Method that is responsible for performing a rollback of the uploaded images
+     * @param imageUrls List of image URLs to delete
+     */
+    private void rollbackUploadedImages(List<String> imageUrls) {
+        if (!imageUrls.isEmpty()) {
+            List<String> imagesPublicId= new ArrayList<>();
+            for (String url : imageUrls) {
+                String publicId = url.substring(url.indexOf("v1/") + 3);
+                System.out.println("Public id: "+ publicId);
+                imagesPublicId.add(publicId);
+            }
+            try {
+                ApiResponse deleteResult = cloudinary.api().deleteResources(imagesPublicId, Collections.emptyMap());
+                System.out.println("Delete result: " + deleteResult);
+            } catch (Exception ex) {
+                throw new RuntimeException("Ha ocurrido un error al realizar el rollback de las imágenes: " + ex.getMessage());
+            }
+        }
     }
 
     /**
