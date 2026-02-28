@@ -7,4 +7,16 @@ public class CarNotfoundException extends RuntimeException {
     public CarNotfoundException(Long id) {
         super("Vehiculo con id " + id + " no encontrado");
     }
+
+    public CarNotfoundException(String message) {
+        super(message);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

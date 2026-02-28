@@ -1,9 +1,7 @@
 package com.rtz.vehicle_manager.controllers;
 
-import com.rtz.vehicle_manager.entities.Car;
 import com.rtz.vehicle_manager.dto.CarDTO;
 import com.rtz.vehicle_manager.services.CarService;
-import com.rtz.vehicle_manager.services.ImageService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

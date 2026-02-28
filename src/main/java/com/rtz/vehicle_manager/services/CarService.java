@@ -9,7 +9,6 @@ import com.rtz.vehicle_manager.errors.CarNotfoundException;
 import com.rtz.vehicle_manager.errors.ModelNotfoundException;
 import com.rtz.vehicle_manager.dto.CarDTO;
 import com.rtz.vehicle_manager.repositories.CarRepository;
-import jakarta.persistence.EntityManager;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
